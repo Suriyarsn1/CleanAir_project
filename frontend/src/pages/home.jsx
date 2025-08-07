@@ -139,7 +139,7 @@ export default function Home() {
         <section
           id="About Us"
           ref={aboutRef}
-          className={`relative rounded-lg overflow-hidden transform transition-opacity transition-transform duration-700 ease-in-out will-change-opacity will-change-transform ${
+          className={`relative rounded-lg overflow-hidden transform transition-transform duration-700 ease-in-out will-change-opacity will-change-transform ${
             aboutVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           } scroll-mt-28 text-white`}
           style={{ scrollMarginTop: "112px" }}
@@ -167,7 +167,7 @@ export default function Home() {
         <section
           id="Services"
           ref={servicesRef}
-          className={`relative rounded-lg overflow-hidden transform transition-opacity transition-transform duration-700 ease-in-out delay-[150ms] will-change-opacity will-change-transform ${
+          className={`relative rounded-lg overflow-hidden transform  transition-transform duration-700 ease-in-out delay-[150ms] will-change-opacity will-change-transform ${
             servicesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           } scroll-mt-28 text-white`}
           style={{ scrollMarginTop: "112px" }}
@@ -196,7 +196,7 @@ export default function Home() {
         <section
           id="Contact"
           ref={contactRef}
-          className={`relative rounded-lg overflow-hidden transform transition-opacity transition-transform duration-700 ease-in-out delay-[300ms] will-change-opacity will-change-transform ${
+          className={`relative rounded-lg overflow-hidden  transform transition-transform duration-700 ease-in-out delay-[300ms] will-change-opacity will-change-transform ${
             contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           } scroll-mt-28 text-white`}
           style={{ scrollMarginTop: "112px" }}
