@@ -1,8 +1,6 @@
-// components/SectionContent.jsx
+
 
 import FadeInImageText from "./fadeInimageHome";
-
-// Import images once here to avoid repetition
 import lungsImg from "../assets/lungsimg.jpg";
 import aboutImg from "../assets/aboutusimg.jpg";
 import servicesImg from "../assets/serviceimg.jpg";

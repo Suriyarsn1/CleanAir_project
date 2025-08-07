@@ -1,6 +1,3 @@
-// components/FadeInImageText.jsx
-
-
 export default function FadeInImageText({ imgSrc, imgAlt, title, children }) {
   return (
     <div className="p-8 bg-sky-100 rounded-lg shadow-lg mx-auto mt-8 flex flex-col md:flex-row items-center gap-8 fade-in max-w-7xl">

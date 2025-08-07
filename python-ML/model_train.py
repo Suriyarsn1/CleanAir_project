@@ -7,14 +7,14 @@ import joblib
 # Load dataset
 data = pd.read_csv("survey_lung_cancer.csv")
 
-# Inspect data (optional)
+# Inspect data
 print(data.head())
 print(data.info())
 
 # Map diagnosis column to numeric labels (YES=1, NO=0)
 data['LUNG_CANCER'] = data['LUNG_CANCER'].map({'YES': 1, 'NO': 0})
 
-# Encode 'GENDER' categorical feature: M=1, F=0 (or use pd.get_dummies)
+# Encode 'GENDER' categorical feature: M=1, F=0 
 data['GENDER'] = data['GENDER'].map({'M': 1, 'F': 0})
 
 # Check for missing values
@@ -31,12 +31,12 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Model initialization with some hyperparameters tuning (you can tune further)
+# Model initialization with some hyperparameters tuning
 clf = RandomForestClassifier(
     n_estimators=200,
     max_depth=10,
     random_state=42,
-    class_weight='balanced'  # helps with imbalanced classes if exist
+    class_weight='balanced'  
 )
 
 # Train model

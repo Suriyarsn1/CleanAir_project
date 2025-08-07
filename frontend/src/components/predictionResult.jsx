@@ -7,9 +7,9 @@ export default function PredictionResult({
   showHistory,
   history,
   interpretResult,
-  probability, // receive the numeric probability prop
+  probability, 
 }) {
-  // Format probability as percentage with 1 decimal place
+  // Format probability as percentage 
   const formattedProbability =
     probability !== null && probability !== undefined
       ? `${(probability * 100).toFixed(1)}%`

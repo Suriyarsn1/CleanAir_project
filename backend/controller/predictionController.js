@@ -4,7 +4,7 @@ const { getPrediction } = require('../services/predictionService');
 
 exports.predict = async (req, res) => {
   try {
-    const inputData = req.body.features;  // Extract feature object as expected from frontend
+    const inputData = req.body.features;  
 
     console.log('Received input features:', inputData);
 
@@ -12,18 +12,17 @@ exports.predict = async (req, res) => {
       return res.status(400).json({ error: 'Invalid input data' });
     }
 
-    // Call your prediction service (e.g., communicate with Python ML service)
+    // Call your prediction service 
     const output = await getPrediction(inputData);
 
-    // Save prediction record linked to the authenticated user
+    // Save prediction record 
     const record = new Prediction({
       input: inputData,
       output,
-      user: req.userId  // Ensure user ID is set via auth middleware
+      user: req.userId 
     });
 
     await record.save();
-    console.log(output)
     return res.json({ output });
 
   } catch (err) {
@@ -40,7 +39,7 @@ exports.history = async (req, res) => {
       return res.status(401).json({ message: 'Session expired. Please login again.' });
     }
 
-    // Retrieve all prediction records for user, sorted by date descending
+    // Retrieve all prediction
     const data = await Prediction.find({ user: req.userId }).sort({ date: -1 });
 
     if (!data || data.length === 0) {

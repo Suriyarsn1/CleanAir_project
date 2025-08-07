@@ -1,5 +1,5 @@
 export default function SectionHealthCareList() {
-  // Example static data, replace with your fetched data or state later
+  // Example static data
   const healthcareCenters = [
     {
       id: 1,

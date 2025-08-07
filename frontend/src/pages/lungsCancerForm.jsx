@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navBar";
-import CloudBackground from "./components/cloudBackground";
+import CloudBackground from "../components/cloudBackground";
 import PredictionForm from "../components/predictionForm";
 import PredictionResult from "../components/predictionResult";
 import PredictionHistory from "../components/predictionHistory";
-import { fields, images, healthcareCenters, lungSpecialists } from "../utils/config";
-import axios from "axios";
+import { fields, lungSpecialists } from "../utils/config";
+import healthyLungs from '../assets/healthylungs.jpg'
+import diseseslungs from '../assets/healthylungs.jpg'
+import axios from '../config/apiInstance'
+import { API_ENDPOINTS } from '../constants/api';
 
 export default function LungCancerPredictPage() {
-  // State
+  
   const [input, setInput] = useState(Array(fields.length).fill(""));
   const [resultData, setResultData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,20 +23,20 @@ export default function LungCancerPredictPage() {
   const navigate = useNavigate();
   const userToken = localStorage.getItem("token");
 
-  // Redirect if no token
+  
   useEffect(() => {
     if (!userToken) {
       navigate("/");
     }
   }, [navigate, userToken]);
 
-  // Interpret model predicted value to UI display info
+  
   const interpretResult = (mlValue) => {
-    if (mlValue === 2) {
+    if (mlValue === 0) {
       return {
         status: "Lungs Healthy",
         desc: "Great! Your lungs appear healthy. Maintain this by regular exercise and a healthy lifestyle.",
-        img: images.healthy,
+        img: <img src={healthyLungs} alt="healthy Lungs img" />,
         advice: (
           <ul className="list-disc ml-5 mt-2 text-green-700">
             <li>
@@ -52,34 +55,11 @@ export default function LungCancerPredictPage() {
         ),
       };
     }
-    if (mlValue === 3 || mlValue === 0) {
-      return {
-        status: "Moderate Risk",
-        desc: "There may be moderate signs of risk. It's recommended to manage your health proactively.",
-        img: images.moderate,
-        advice: (
-          <div className="mt-2 text-blue-600">
-            <p>Consider joining a gym or fitness group to improve lung strength.</p>
-            <p className="mt-2 font-semibold">Sample fitness centers:</p>
-            <ul className="list-disc ml-5">
-              {healthcareCenters.map((c) => (
-                <li key={c.name}>
-                  <a href={c.url} className="underline" target="_blank" rel="noopener noreferrer">
-                    {c.name}
-                  </a>
-                  , {c.location}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ),
-      };
-    }
     if (mlValue === 1) {
       return {
         status: "Lung Cancer Detected",
         desc: "Warning: The results indicate a high likelihood of lung cancer.",
-        img: images.cancer,
+        img: <img src={diseseslungs} alt="diseseslungs img" />,
         advice: (
           <div>
             <p className="text-red-700 font-bold mt-2">
@@ -130,7 +110,7 @@ export default function LungCancerPredictPage() {
       const features = {};
       fields.forEach((fieldObj, index) => {
         let value = vals[index];
-        const key = fieldObj.name.toUpperCase(); // Normalize key casing UPPERCASE for backend match
+        const key = fieldObj.name.toUpperCase(); 
 
         if (key === "GENDER") {
           if (typeof value === "string") {
@@ -143,14 +123,13 @@ export default function LungCancerPredictPage() {
           typeof value === "string" && value.trim() === "" ? 0 : Number(value) || value;
       });
 
-      console.log("Payload to backend:", features); // For debugging
 
       const resp = await axios.post(
-        "http://localhost:5000/api/predict",
+       API_ENDPOINTS.PREDICT,
         { features },
         { headers: { Authorization: `Bearer ${userToken}` } }
       );
-         console.log(resp)
+        
      if (resp.status === 200 && resp.data && resp.data.output && "prediction" in resp.data.output) {
   setResultData(interpretResult(resp.data.output.prediction));
   setHistory((curr) => [
@@ -189,7 +168,7 @@ export default function LungCancerPredictPage() {
     setInput(Array(fields.length).fill(""));
   };
 
-  // Show/hide history and fetch from API if needed
+ 
   const handleShowHistory = async () => {
     if (!userToken) {
       alert("You must be logged in to view history.");
@@ -198,7 +177,7 @@ export default function LungCancerPredictPage() {
     if (!showHistory) {
       setLoading(true);
       try {
-        const resp = await axios.get("http://localhost:5000/api/predict/history", {
+        const resp = await axios.get(API_ENDPOINTS.PREDICT_HISTORY, {
           headers: { Authorization: `Bearer ${userToken}` },
         });
         setHistory(resp.data.data || []);
@@ -211,7 +190,7 @@ export default function LungCancerPredictPage() {
     }
     setShowHistory((prev) => !prev);
   };
-  console.log(resultData)
+ 
 
   return (
     <>

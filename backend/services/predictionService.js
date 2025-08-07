@@ -12,7 +12,7 @@ function preprocessInput(input) {
       const genderUpper = processed.GENDER.trim().toUpperCase();
       processed.GENDER = GENDER_MAP[genderUpper] !== undefined ? GENDER_MAP[genderUpper] : 0;
     } else if (typeof processed.GENDER === "number") {
-      // Keep as is
+     
     } else {
       processed.GENDER = 0;
     }

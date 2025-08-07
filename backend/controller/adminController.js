@@ -3,7 +3,7 @@ const User =require('../models/authModel');
 
 exports.getAllUsersWithPredictions = async (req, res) => {
   try {
-    // Optionally restrict access to admins only
+    //  restrict access to admins only
     if (!req.userRole || req.userRole !== 'admin') {
       return res.status(403).json({ error: 'Forbidden: Admins only' });
     }
@@ -12,7 +12,7 @@ exports.getAllUsersWithPredictions = async (req, res) => {
     const filterDate = req.query.predictionDate;
     let dateQuery = {};
     if (filterDate) {
-      // Filter predictions on the specific day (midnight to midnight)
+      // Filter predictions on the specific day 
       const d = new Date(filterDate);
       const start = new Date(d.setHours(0, 0, 0, 0));
       const end = new Date(d.setHours(23, 59, 59, 999));
@@ -22,7 +22,7 @@ exports.getAllUsersWithPredictions = async (req, res) => {
     // Find all users
     const users = await User.find({});
 
-    // For each user, find their predictions (optionally filtered by date)
+    // For each user, find their predictions 
     const usersWithPredictions = await Promise.all(
       users.map(async (user) => {
         const predictions = await Prediction.find({

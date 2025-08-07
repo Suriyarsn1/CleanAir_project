@@ -53,14 +53,7 @@ def predict():
         if not data:
             return jsonify({"error": "Missing JSON in request body"}), 400
 
-        # Expect input as a JSON dict keyed by feature names (not array)
-        # For example:
-        # {
-        #   "AGE": 45,
-        #   "GENDER": "M",
-        #   "SMOKING": 1,
-        #   ...
-        # }
+     
         input_features = data.get('features')
         if not input_features or not isinstance(input_features, dict):
             return jsonify({"error": "Request JSON must contain 'features' dict with feature values"}), 400
@@ -72,7 +65,7 @@ def predict():
         prediction = model.predict(X)
         prediction_proba = None
         if hasattr(model, "predict_proba"):
-            prediction_proba = model.predict_proba(X)[:, 1]  # Probability of positive class
+            prediction_proba = model.predict_proba(X)[:, 1]  
 
         response = {
             "prediction": int(prediction[0]),

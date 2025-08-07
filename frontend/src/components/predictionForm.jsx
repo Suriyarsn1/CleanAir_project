@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function PredictionForm({ fields, input, setInput, loading, onSubmit }) {
   // Update an input value by index
   const handleChange = (idx, val) => {
@@ -8,7 +6,7 @@ export default function PredictionForm({ fields, input, setInput, loading, onSub
     setInput(newInput);
   };
 
-  // On form submit map inputs to numeric values and call onSubmit
+  //  form submit 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -18,7 +16,7 @@ export default function PredictionForm({ fields, input, setInput, loading, onSub
       if (field.name.toUpperCase() === "GENDER") {
         if (v === "M") return 1;
         if (v === "F") return 0;
-        return 0; // default fallback for empty or unknown
+        return 0;
       }
       if (field.type === "yesno") {
         return v === "yes" ? 1 : 0;

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import axios from '../config/apiInstance'
+import { API_ENDPOINTS } from '../constants/api';
 
 export default function RegistrationForm({
   setUserName,
@@ -28,13 +29,13 @@ export default function RegistrationForm({
     return () => clearTimeout(timerId);
   }, [resendTimer]);
 
-  // Send OTP (to backend)
+  // Send OTP 
   const handleSendOtp = async () => {
     if (!emailValue) return alert("Please enter your email first");
     try {
       setSendingOtp(true);
       const resp = await axios.post(
-        "http://localhost:5000/api/auth/send-otp",
+       API_ENDPOINTS.AUTH_SEND_OTP,
         { email: emailValue }
       );
       setOtpSent(true);
@@ -50,12 +51,12 @@ export default function RegistrationForm({
     }
   };
 
-  // Verify OTP (with backend)
+  // Verify OTP 
   const handleVerifyOtp = async () => {
     if (!otp) return alert("Please enter the OTP");
     try {
       setVerifyingOtp(true);
-      const resp = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+      const resp = await axios.post(API_ENDPOINTS.AUTH_VERIFY_OTP, {
         email: emailValue,
         otp,
       });
@@ -76,12 +77,12 @@ export default function RegistrationForm({
     }
   };
 
-  // Resend (only if allowed)
+  // Resend 
   const handleResendOtp = () => {
     if (resendTimer === 0) handleSendOtp();
   };
 
-  // Track email change and reset OTP flow
+  // Track email change
   const onEmailChange = (e) => {
     const val = e.target.value;
     setEmailValue(val);
@@ -95,14 +96,14 @@ export default function RegistrationForm({
     }
   };
 
-  // Password value handler (for possible confirm password validation)
+  // Password value handler 
   const onPasswordChange = (e) => {
     setPasswordValue(e.target.value);
     setUserPassword(e.target.value);
     msg('')
   };
 
-  // Submit handler - basic confirm password check
+  // Submit handler 
   const onFormSubmit = (e) => {
     e.preventDefault();
     if (!otpVerified) {
@@ -267,7 +268,7 @@ export default function RegistrationForm({
         </button>
       </form>
 
-      {/* Validation/Error Message */}
+      {/* Error Message */}
       {msg && (
         <div className="text-center mt-3 text-red-600 font-medium select-none">
           {msg}

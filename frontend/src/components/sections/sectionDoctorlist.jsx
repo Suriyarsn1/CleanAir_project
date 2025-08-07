@@ -1,5 +1,5 @@
 export default function SectionDoctorList() {
-  // Sample static data placeholder (replace with your fetched data)
+  // Sample static data 
   const doctors = [
     { id: 1, name: "Dr. Arvind Kumar", hospital: "Medanta Hospital, Gurugram", url: "https://www.medanta.org/doctor/dr-arvind-kumar/" },
     { id: 2, name: "Dr. S.K. Chhabra", hospital: "BLK Hospital, New Delhi", url: "https://www.blkhospital.com/doctors/dr-s-k-chhabra/" }

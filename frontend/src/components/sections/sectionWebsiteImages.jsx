@@ -1,7 +1,7 @@
 
 
 export default function SectionWebsiteImages() {
-  // Example placeholder data; replace with your real fetched data when ready
+  // Example placeholder data
   const exampleImages = [
     { id: 1, title: "Homepage Banner", url: "https://source.unsplash.com/featured/?nature", alt: "Nature banner" },
     { id: 2, title: "Doctor Team", url: "https://source.unsplash.com/featured/?doctor", alt: "Doctor team" },
@@ -31,7 +31,7 @@ export default function SectionWebsiteImages() {
             />
             <div className="p-4 flex flex-col flex-grow">
               <h3 className="text-lg font-semibold text-sky-700 mb-2">{title}</h3>
-              {/* Placeholder for buttons or actions */}
+              {/*  buttons  */}
               <div className="mt-auto flex gap-3">
                 <button className="flex-1 bg-sky-500 hover:bg-sky-600 text-white rounded py-2 transition">
                   Edit
@@ -45,7 +45,6 @@ export default function SectionWebsiteImages() {
         ))}
       </div>
 
-      {/* TODO: Add form/modal to upload new images */}
 
     </section>
   );

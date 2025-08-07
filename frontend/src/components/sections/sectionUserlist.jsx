@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-
 import DateFilter from "../sections/cards/dataFilter";
 import UserCard from "../sections/cards/userCard";
+import { API_ENDPOINTS } from '../../constants/api';
+import axios from "../../config/apiInstance";
 
 export default function SectionUserList() {
   const [users, setUsers] = useState([]);
@@ -20,17 +20,21 @@ export default function SectionUserList() {
         setLoading(false);
         return;
       }
-      const url = new URL("http://localhost:5000/api/admin/users");
-      if (date) url.searchParams.append("predictionDate", date);
-      const response = await axios.get(url.toString(), {
+      const params = {};
+      if (date) params.predictionDate = date;
+
+      const response = await axios.get(API_ENDPOINTS.ADMIN_USERS, {
         headers: { Authorization: `Bearer ${token}` },
+        params,
       });
+
       setUsers(response.data.users || []);
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Failed to fetch users.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -38,27 +42,18 @@ export default function SectionUserList() {
   }, [filterDate]);
 
   return (
-    <section className="animate-fade-up px-4 py-6 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-semibold text-sky-700 mb-6 text-center sm:text-left">
-        Manage User Lists
-      </h2>
+    <div className="p-4 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Manage User Lists</h2>
+      <DateFilter date={filterDate} setDate={setFilterDate} />
 
-      <DateFilter filterDate={filterDate} setFilterDate={setFilterDate} />
+      {loading && <p>Loading users...</p>}
+      {error && <p className="text-red-600">{error}</p>}
 
-      {loading && <p className="text-center text-sky-600 animate-pulse">Loading users...</p>}
-      {error && <p className="text-center text-red-600">{error}</p>}
+      {!loading && !error && users.length === 0 && <p>No users found.</p>}
 
-      {!loading && !error && users.length === 0 && (
-        <p className="text-center py-6 text-gray-500">No users found.</p>
-      )}
-
-      {!loading && !error && users.length > 0 && (
-        <div className="space-y-12">
-          {users.map((user) => (
-            <UserCard key={user._id} user={user} />
-          ))}
-        </div>
-      )}
-    </section>
+      {!loading && !error && users.length > 0 &&
+        users.map((user) => <UserCard key={user._id} user={user} />)
+      }
+    </div>
   );
 }

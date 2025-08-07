@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import axios from '../config/apiInstance'
+import { API_ENDPOINTS } from '../constants/api';
 
 export default function LoginForm({
   handleLogin,
@@ -9,20 +10,21 @@ export default function LoginForm({
   setLoginPassword,
   msg,
 }) {
-  const [mode, setMode] = useState("login"); // "login" | "forgot" | "reset"
+  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-  const [userName,setUserName]=useState('');
-  
+  const [userName, setUserName] = useState('');
+
   // For password reset
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); 
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
-  // Handler for sending OTP
+
+  // sending OTP
   const handleForgot = async (e) => {
     e.preventDefault();
     setForgotMsg("");
@@ -30,7 +32,7 @@ export default function LoginForm({
     setOtpSent(false);
     setOtpVerified(false);
     try {
-      await axios.post("http://localhost:5000/api/auth/send-otp", { email });
+      await axios.post(API_ENDPOINTS.AUTH_SEND_OTP, { email });
       setForgotMsg("OTP sent to your email. Please enter it below to verify.");
       setOtpSent(true);
     } catch (err) {
@@ -39,35 +41,35 @@ export default function LoginForm({
     setLoading(false);
   };
 
-  // Handler for verifying OTP
-const handleVerifyOtp = async (e) => {
-  e.preventDefault();
-  setForgotMsg("");
-  setLoading(true);
+  // verifying OTP
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setForgotMsg("");
+    setLoading(true);
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/auth/verify-otp", { email, otp });
-    
-    if (res.data.verified) {
-      setUserName(res.data.userName || ""); 
-      setOtpVerified(true);
-      setMode("reset");
-      setForgotMsg(""); 
-    } else {
-      // Backend may respond with verified = false in some APIs
+    try {
+      const res = await axios.post(API_ENDPOINTS.AUTH_VERIFY_OTP, { email, otp });
+
+      if (res.data.verified) {
+        setUserName(res.data.userName || "");
+        setOtpVerified(true);
+        setMode("reset");
+        setForgotMsg("");
+      } else {
+        //  respond with verified false
+        setOtpVerified(false);
+        setForgotMsg(res.data.message || "OTP verification failed.");
+      }
+    } catch (err) {
       setOtpVerified(false);
-      setForgotMsg(res.data.message || "OTP verification failed.");
+      setForgotMsg(err?.response?.data?.error || "OTP verification failed.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setOtpVerified(false);
-    setForgotMsg(err?.response?.data?.error || "OTP verification failed.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
-  // Handler for setting a new password
+  //  setting a new password
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setForgotMsg("");
@@ -77,7 +79,7 @@ const handleVerifyOtp = async (e) => {
     if (!newPassword || newPassword.length < 6)
       return setForgotMsg("Password must be at least 6 characters.");
     try {
-      await axios.post("http://localhost:5000/api/auth/reset-password", { email, newPassword });
+      await axios.post(API_ENDPOINTS.AUTH_RESET_OTP, { email, newPassword });
       setResetSuccess(true);
       setForgotMsg("Password reset successful! Please log in.");
     } catch (err) {
@@ -98,75 +100,73 @@ const handleVerifyOtp = async (e) => {
     setResetSuccess(false);
   };
 
-  
+
 
   return (
     <div className="relative z-10 w-full max-w-md p-8 rounded-3xl bg-white/40 backdrop-blur-lg border border-white/40 shadow-xl flex flex-col gap-6 fade-in">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-2 text-sky-800 tracking-wide drop-shadow-md">
         Welcome Back
       </h1>
-      {/* LOGIN FORM MODE */}
+      {/* Login Form  */}
       {mode === "login" && (<>
-          {/* ... Login Form ... */}
-           <form
-        className="flex flex-col gap-5"
-        onSubmit={e => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
-        <div className="flex flex-col gap-1">
-          <label htmlFor="username" className="text-base font-semibold text-sky-900">
-            User Name
-          </label>
-          <input
-            id="username"
-            className="w-full px-3 py-2 rounded-lg border border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 bg-white/80 text-base sm:text-lg transition-all"
-            type="text"
-            placeholder="Enter your user name"
-            value={loginUserName}
-            onChange={e => setLoginUserName(e.target.value)}
-            autoComplete="username"
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-base font-semibold text-sky-900">
-            Password
-          </label>
-          <input
-            id="password"
-            className="w-full px-3 py-2 rounded-lg border border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 bg-white/80 text-base sm:text-lg transition-all"
-            type="password"
-            placeholder="Password"
-            value={loginPassword}
-            onChange={e => setLoginPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </div>
-        <button
-          className="w-full bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-white py-2 sm:py-3 rounded-2xl font-semibold tracking-wide shadow transition-all mt-3 text-base sm:text-lg"
-          type="submit"
-        >
-          Login
-        </button>
-      </form>
-          <div className="flex flex-col gap-1 text-sm text-center mt-2">
-            <a href="/user/register" className="underline text-sky-800 hover:text-sky-950 transition">
-              Don't have User Id?
-            </a>
-            <button
-              type="button"
-              className="underline text-sky-800 hover:text-sky-950 transition bg-none border-none p-0"
-              onClick={() => setMode("forgot")}
-            >
-              Forgot User Id/Password?
-            </button>
+        <form
+          className="flex flex-col gap-5"
+          onSubmit={e => {
+            e.preventDefault();
+            handleLogin();
+          }}
+        >
+          <div className="flex flex-col gap-1">
+            <label htmlFor="username" className="text-base font-semibold text-sky-900">
+              User Name
+            </label>
+            <input
+              id="username"
+              className="w-full px-3 py-2 rounded-lg border border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 bg-white/80 text-base sm:text-lg transition-all"
+              type="text"
+              placeholder="Enter your user name"
+              value={loginUserName}
+              onChange={e => setLoginUserName(e.target.value)}
+              autoComplete="username"
+              required
+            />
           </div>
-        </>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="password" className="text-base font-semibold text-sky-900">
+              Password
+            </label>
+            <input
+              id="password"
+              className="w-full px-3 py-2 rounded-lg border border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 bg-white/80 text-base sm:text-lg transition-all"
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={e => setLoginPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+          <button
+            className="w-full bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-white py-2 sm:py-3 rounded-2xl font-semibold tracking-wide shadow transition-all mt-3 text-base sm:text-lg"
+            type="submit" >
+            Login
+          </button>
+        </form>
+        <div className="flex flex-col gap-1 text-sm text-center mt-2">
+          <a href="/user/register" className="underline text-sky-800 hover:text-sky-950 transition">
+            Don't have User Id?
+          </a>
+          <button
+            type="button"
+            className="underline text-sky-800 hover:text-sky-950 transition bg-none border-none p-0"
+            onClick={() => setMode("forgot")}
+          >
+            Forgot User Id/Password?
+          </button>
+        </div>
+      </>
       )}
-      {/* FORGOT PASSWORD/OTP MODE */}
+      {/* Forgot Password Form */}
       {mode === "forgot" && !otpVerified && (
         <form className="flex flex-col gap-5" onSubmit={otpSent ? handleVerifyOtp : handleForgot}>
           <div className="flex flex-col gap-1">
@@ -184,7 +184,7 @@ const handleVerifyOtp = async (e) => {
               disabled={otpSent}
             />
           </div>
-          {/* OTP input appears after OTP sent */}
+          {/* OTP Send Form */}
           {otpSent && (
             <div className="flex flex-col gap-1">
               <label htmlFor="otp" className="text-base font-semibold text-sky-900">
@@ -214,7 +214,7 @@ const handleVerifyOtp = async (e) => {
           {forgotMsg && <div className="text-center mt-1 text-sky-800 font-medium">{forgotMsg}</div>}
         </form>
       )}
-      {/* PASSWORD RESET MODE, after OTP verified */}
+      {/* Password Reset Form */}
       {mode === "reset" && (
         <form className="flex flex-col gap-5" onSubmit={handleResetPassword}>
           {resetSuccess ? (
@@ -228,7 +228,7 @@ const handleVerifyOtp = async (e) => {
             <>
               <div className="text-sm text-center text-sky-800 font-semibold">
                 <p>Set a new password for your account</p> <br />
-               <p className="font-bold text-xl"> User Name: {userName}</p>
+                <p className="font-bold text-xl"> User Name: {userName}</p>
               </div>
               <div className="flex flex-col gap-1">
                 <label htmlFor="new-password" className="text-base font-semibold text-sky-900">

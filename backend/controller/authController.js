@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const otpStore = new Map();
 
-// User Registration (No change)
+// User Registration 
 exports.userRegistration = async (req, res) => {
   const { userName, userPassword, userEmail } = req.body;
   try {
@@ -31,7 +31,7 @@ exports.userRegistration = async (req, res) => {
   }
 };
 
-// User Login (No change)
+// User Login 
 exports.userLogin = async (req, res) => {
   const { loginUserName, loginPassword } = req.body;
   try {
@@ -66,7 +66,7 @@ exports.userLogin = async (req, res) => {
   }
 };
 
-// Send OTP to Email (No change)
+// Send OTP to Email 
 exports.sendOtp = async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required' });
@@ -99,7 +99,7 @@ exports.sendOtp = async (req, res) => {
   }
 };
 
-// Verify OTP (No major change except return user info for reset flow)
+// Verify OTP 
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -119,7 +119,7 @@ exports.verifyOtp = async (req, res) => {
   }
 
   if (record.otp === otp) {
-    // OTP verified successfully, fetch user info to send to frontend
+    // OTP verified successfully
     try {
       const user = await User.findOne({ email }).select('userName email');
       otpStore.delete(email);
@@ -128,7 +128,7 @@ exports.verifyOtp = async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Send back verification status and username to frontend
+      // Send back verification status 
       return res.status(200).json({
         verified: true,
         message: 'OTP verified successfully',
@@ -143,7 +143,7 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
-// New Reset Password Controller - to be called after successful OTP verification
+// New Reset Password Controller
 exports.resetPassword = async (req, res) => {
   const { email, newPassword } = req.body;
 

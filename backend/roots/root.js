@@ -29,6 +29,6 @@ router.post("/auth/reset-password", resetPassword);
 
 
 
-console.log('Routes setup correctly');
+
 
 module.exports = router;

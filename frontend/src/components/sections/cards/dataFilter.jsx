@@ -1,24 +1,26 @@
+export default function DateFilter({ date, setDate }) {
+  
+  const today = new Date().toISOString().split("T")[0];
 
+  const handleClear = () => {
+    setDate("");
+  };
 
-export default function DateFilter({ filterDate, setFilterDate }) {
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-4 justify-center sm:justify-start">
-      <label htmlFor="filterDate" className="text-sky-700 font-semibold">
-        Filter Predictions by Date:
-      </label>
+    <div className="flex items-center space-x-2 mb-4">
       <input
-        id="filterDate"
         type="date"
-        className="border border-sky-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
-        value={filterDate}
-        onChange={(e) => setFilterDate(e.target.value)}
-        max={new Date().toISOString().split("T")[0]}
+        value={date || ""}
+        max={today}          
+        onChange={(e) => setDate(e.target.value)}
+        className="border rounded px-3 py-2 text-sky-800"
       />
+
       <button
         type="button"
-        onClick={() => setFilterDate("")}
-        title="Clear filter"
-        className="bg-sky-500 hover:bg-sky-700 text-white px-4 py-1 rounded transition whitespace-nowrap"
+        onClick={handleClear}
+        className="bg-red-600 text-white rounded px-3 py-2 hover:bg-red-700 transition"
+        aria-label="Clear date filter"
       >
         Clear
       </button>

@@ -8,7 +8,7 @@ export default function PredictionHistory({ history, interpretResult }) {
         <p className="text-gray-500 text-center text-sm md:text-base">No predictions yet.</p>
       ) : (
         history.map((item, idx) => {
-          // Handle case where output is object with prediction and probability
+         
           const predictionValue = Array.isArray(item.output)
             ? item.output[0]?.prediction ?? item.output[0]
             : item.output?.prediction ?? item.output;
@@ -32,7 +32,7 @@ export default function PredictionHistory({ history, interpretResult }) {
                 {interpreted.status}
               </h3>
               <p className="text-gray-700 mb-1 text-center max-w-lg">{interpreted.desc}</p>
-              {/* Show probability if available */}
+              {/* Show probability */}
               {probabilityValue !== null && probabilityValue !== undefined && (
                 <p className="text-sm text-gray-600 mb-2 text-center max-w-lg">
                   Confidence: {(probabilityValue * 100).toFixed(1)}%
