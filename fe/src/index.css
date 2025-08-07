@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* Page Fade-IN Animate */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.fade-in {
+  animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(30px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.98);
+  }
+}
+.fade-out {
+  animation: fadeOut 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Cloud Animation */
+
+ @keyframes cloud-move {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(110vw); }
+        }
+        @keyframes cloud-move2 {
+          0% { transform: translateX(-30vw); }
+          100% { transform: translateX(80vw); }
+        }
+        .animate-cloud-move {
+          animation: cloud-move 32s linear infinite;
+        }
+        .animate-cloud-move2 {
+          animation: cloud-move2 40s linear infinite;
+        }
+     
+        /* Cloud and result animation keyframes */
+@keyframes cloud1 { 0% {left:-200px;} 100% {left:100vw;} }
+@keyframes cloud2 { 0% {right:-250px;} 100% {right:100vw;} }
+@keyframes cloud3 { 0% {left:100vw;} 100% {left:-200px;} }
+@keyframes cloud4 { 0% {right:-400px;} 100% {right:100vw;} }
+.animate-cloud1 { animation: cloud1 70s linear infinite; }
+.animate-cloud2 { animation: cloud2 100s linear infinite; }
+.animate-cloud3 { animation: cloud3 90s linear infinite; }
+.animate-cloud4 { animation: cloud4 120s linear infinite; }
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(64px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+.animate-fade-in { animation: fadeInUp 0.8s cubic-bezier(0.24,0.6,0.38,0.91) both; }
+
+@keyframes float {
+  0% { transform: translateY(0);}
+  50% { transform: translateY(-15px);}
+  100% { transform: translateY(0);}
+}
+.animate-float { animation: float 2.7s ease-in-out infinite; }
+
+/* Display Result */
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(64px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+.animate-fade-in { animation: fadeInUp 0.8s cubic-bezier(0.24,0.6,0.38,0.91) both; }
+
+@keyframes float {
+  0% { transform: translateY(0);}
+  50% { transform: translateY(-10px);}
+  100% { transform: translateY(0);}
+}
+.animate-float { animation: float 2.7s ease-in-out infinite; }
+
+/* Moving Cloud */
+
+@keyframes cloudMove {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+}
+.animate-cloud-move {
+  animation: cloudMove 6s ease-in-out infinite;
+}
+.animate-cloud-move2 {
+  animation: cloudMove 9s ease-in-out infinite;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
