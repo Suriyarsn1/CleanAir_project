@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import CloudBackground from "../components/cloudBackground";
+import Navbar from "../components/navBar";
+import CloudBackground from "./components/cloudBackground";
 import PredictionForm from "../components/predictionForm";
 import PredictionResult from "../components/predictionResult";
 import PredictionHistory from "../components/predictionHistory";

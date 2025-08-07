@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/navBar";
 import SectionContent from "../components/sectionHomeContent";
 import logo from "../assets/cleanairlogo.png";
 import headimg from "../assets/lungstitle.jpg";
