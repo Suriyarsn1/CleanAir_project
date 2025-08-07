@@ -1,89 +1,108 @@
 Clean Air Healthcare - Lung Cancer Prediction System
-
-
 Tech Stack
-
 Frontend: React.js (Vite) + Tailwind CSS
 
 Backend: Node.js + Express.js
 
-Authentication: JWT for Users and Admin
+Machine Learning API: Python (Flask)
 
-Machine Learning: Python (Flask API)
+Database: MongoDB (Mongoose)
 
-Database: MongoDB
+Authentication: JWT-based for User and Admin roles
 
-Email Verification: SMTP with OTP
+Email Verification: OTP via SMTP (nodemailer)
 
-Environment Configuration: .env file for secrets and API keys
+Environment Configuration: .env for secrets & keys
+
+Security: API instance, protected routes, role-based access
 
 Project Overview
-Clean Air Healthcare is a lung cancer prediction platform that allows users to assess their lung cancer risk via a machine learning model. Admins have complete visibility and control over users, predictions, and static content.
+Clean Air Healthcare is a full-stack web application that uses a Machine Learning model to help predict the risk of lung cancer. It provides a secure, role-based system for users and admins, with features like OTP-based email verification, prediction history, and a dynamic admin dashboard.
+
+Security Highlights
+API Instance: Axios instance with token headers used in frontend to communicate securely with the backend.
+
+Protected Endpoints:
+
+JWT token required for all user and admin API routes.
+
+Middleware ensures only authenticated users can access prediction routes.
+
+Admin routes protected by role-based access (isAdmin check).
+
+Ports Configuration
+Frontend (Vite): http://localhost:5173
+
+Backend (Express): http://localhost:5000
+
+Python ML API (Flask): http://127.0.0.1:6000
 
 User Flow
 Sign In / Register
 
-If the user doesn’t have an account, click "Don't have account?" to register.
+Click "Don't have an account?" to register.
 
-During registration, the user must enter a valid email and verify it using OTP sent via email.
+Enter a valid email to receive OTP and complete registration.
 
-Once verified, the user can log in.
+Use credentials to log in after verification.
 
 Cancer Prediction
 
-After login, click the "Try Prediction" button.
+Click on "Try Prediction".
 
-A prediction form opens with lung health-related questions.
+Answer lung-health related questions in the form.
 
-Submit answers to receive the prediction result.
+Submit to see your prediction result.
 
-Users can make multiple predictions.
+Option to make multiple predictions.
 
-Users can view previous predictions in their dashboard.
+All previous predictions are saved and viewable when logged in.
 
 Logout
 
-Once done, click logout to exit securely.
+User can securely log out to end the session.
 
 Admin Flow
 Admin Login
 
-Admin credentials are predefined:
+Admin credentials (predefined):
 
 Username: Admin
 
 Password: 12345
 
-Role-based verification ensures only admin can access the admin dashboard.
+Role verification ensures only admin access.
 
-Admin Dashboard Features
+Admin Dashboard Access
 
-Update website content including images, healthcare center suggestions, and doctor suggestions (static/dynamic).
+Change website images (static/dynamic).
 
-View all registered users and their prediction results (fetched dynamically from MongoDB).
+Update healthcare center and doctor suggestions.
 
-Full access to content management.
+View all user details and their prediction records (fetched dynamically from MongoDB).
+
+Admin has full access to all dashboard content and logic.
 
 Environment Configuration
-All API URLs, email credentials, database URIs, and JWT secrets are stored using .env files in both frontend and backend.
+We use .env files to securely store all configuration and secrets.
 
-Example:
-
+Backend .env Example:
 env
 Copy
 Edit
-# Backend .env
 PORT=5000
 MONGO_URI=your_mongo_db_uri
 JWT_SECRET=your_jwt_secret
 SMTP_USER=your_email
 SMTP_PASS=your_password
 PYTHON_API_URL=http://127.0.0.1:6000
-
-# Frontend .env
+Frontend .env Example:
+env
+Copy
+Edit
 VITE_BACKEND_URL=http://localhost:5000
-Run Instructions
-Backend (Node.js + Express.js)
+How to Run
+1. Backend (Node.js + Express)
 bash
 Copy
 Edit
@@ -92,7 +111,7 @@ npm install
 npm run dev
 Runs on: http://localhost:5000
 
-Frontend (React + Vite + Tailwind CSS)
+2. Frontend (React + Vite + Tailwind CSS)
 bash
 Copy
 Edit
@@ -101,14 +120,16 @@ npm install
 npm run dev
 Runs on: http://localhost:5173
 
-Python ML API (Flask)
+3. Python ML API (Flask)
 bash
 Copy
 Edit
 cd python-ML
-pip install flask pandas numpy scikit-learn joblib
+pip install -r requirements.txt
 python api.py
 Runs on: http://127.0.0.1:6000
 
-Database
-All user data, cancer prediction results, and admin-edited content are stored and retrieved from MongoDB. Predictions are saved automatically and available for review in the user dashboard.
+Database (MongoDB)
+User data, login info, and cancer prediction results are stored in MongoDB.
+
+Admin dashboard dynamically fetches data from the database.
