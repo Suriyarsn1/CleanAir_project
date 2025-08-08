@@ -99,8 +99,40 @@ exports.sendOtp = async (req, res) => {
   }
 };
 
+exports.newUserVerifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ error: 'Email and OTP are required' });
+  }
+
+  const record = otpStore.get(email);
+
+  if (!record) {
+    return res.status(400).json({ error: 'No OTP found for this email' });
+  }
+
+  if (Date.now() > record.expires) {
+    otpStore.delete(email);
+    return res.status(400).json({ error: 'OTP has expired' });
+  }
+
+  if (record.otp === otp) {
+    otpStore.delete(email);
+
+    // Successful OTP verification for new user (ready for registration)
+    return res.status(200).json({
+      verified: true,
+      message: 'OTP verified successfully. You can now register.'
+    });
+  } else {
+    return res.status(400).json({ error: 'Invalid OTP' });
+  }
+};
+
+
 // Verify OTP 
-exports.verifyOtp = async (req, res) => {
+exports.existUserverifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   if (!email || !otp) {

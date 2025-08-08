@@ -56,7 +56,7 @@ export default function RegistrationForm({
     if (!otp) return alert("Please enter the OTP");
     try {
       setVerifyingOtp(true);
-      const resp = await axios.post(API_ENDPOINTS.AUTH_VERIFY_OTP, {
+      const resp = await axios.post(API_ENDPOINTS.AUTH_NEW_USER_VERFY_OTP, {
         email: emailValue,
         otp,
       });

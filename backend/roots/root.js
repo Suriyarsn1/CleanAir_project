@@ -4,7 +4,7 @@ const router = express.Router();
 const auth = require('../middlewares/jwtToken');
 const adminOnly = require('../middlewares/adminOnly'); 
 
-const { userRegistration, userLogin,sendOtp,verifyOtp,resetPassword } = require('../controller/authController');
+const { userRegistration, userLogin,sendOtp,newUserVerifyOtp ,existUserverifyOtp,resetPassword } = require('../controller/authController');
 const {
   predict,
   history,
@@ -24,7 +24,8 @@ router.get('/admin/users', auth, adminOnly, getAllUsersWithPredictions);
 
 //Email verifiction
 router.post("/auth/send-otp", sendOtp);
-router.post("/auth/verify-otp", verifyOtp);
+router.post("/auth/new/user/verify-otp", newUserVerifyOtp );
+router.post('/auth/exist/user/verify-otp',existUserverifyOtp)
 router.post("/auth/reset-password", resetPassword);
 
 

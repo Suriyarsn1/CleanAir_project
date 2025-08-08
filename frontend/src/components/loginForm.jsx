@@ -48,7 +48,7 @@ export default function LoginForm({
     setLoading(true);
 
     try {
-      const res = await axios.post(API_ENDPOINTS.AUTH_VERIFY_OTP, { email, otp });
+      const res = await axios.post(API_ENDPOINTS.AUTH_EXIST_USER_VERIFY_OTP, { email, otp });
 
       if (res.data.verified) {
         setUserName(res.data.userName || "");
