@@ -9,4 +9,5 @@ export const API_ENDPOINTS={
     PREDICT:'/predict',
     AUTH_NEW_USER_VERFY_OTP:'/auth/new/user/verify-otp',
     PREDICT_HISTORY:'/predict/history',
+    CHECK_TOKEN_STATUS:'/token/status',
 }

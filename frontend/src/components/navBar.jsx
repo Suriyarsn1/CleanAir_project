@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useState,useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,24 @@ function Navbar() {
   const userToken = localStorage.getItem("token");
   const uName = localStorage.getItem("userName");
   const uRole = localStorage.getItem("userRole");
+  const [tokenStatus,setTokenStatus]=useState(userToken)
   const navigate = useNavigate();
+
+    useEffect(() => {
+  async function tokenStatus(){
+    try{
+       const res= await axios.post(API_ENDPOINTS.CHECK_TOKEN_STATUS,{},{headers:{Authorization:`Bearer ${userToken}`}})
+       console.log(res.data)
+      }catch(err)
+      {
+        if(err.response && err.status===401)
+        {
+          setTokenStatus(null)
+        }
+      }
+    }
+    tokenStatus()
+    }, [userToken]);
 
   const onLogoutClick = (e) => {
     e.preventDefault();
@@ -26,7 +43,7 @@ function Navbar() {
 
   return (
     <nav className="bg-[#F7F4DF] p-4 shadow-sm sticky top-0 z-40">
-      {!userToken ? (
+      {tokenStatus? (
         <div className="flex justify-end pr-4 font-medium fade-in">
           <a
             href="/login"

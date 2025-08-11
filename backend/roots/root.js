@@ -25,8 +25,11 @@ router.get('/admin/users', auth, adminOnly, getAllUsersWithPredictions);
 //Email verifiction
 router.post("/auth/send-otp", sendOtp);
 router.post("/auth/new/user/verify-otp", newUserVerifyOtp );
-router.post('/auth/exist/user/verify-otp',existUserverifyOtp)
+router.post('/auth/exist/user/verify-otp',existUserverifyOtp);
 router.post("/auth/reset-password", resetPassword);
+
+//Token Verification
+router.post('/token/status',auth);
 
 
 

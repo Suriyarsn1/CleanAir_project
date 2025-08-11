@@ -5,11 +5,10 @@ import CloudBackground from "../components/cloudBackground";
 import PredictionForm from "../components/predictionForm";
 import PredictionResult from "../components/predictionResult";
 import PredictionHistory from "../components/predictionHistory";
-import { fields, lungSpecialists } from "../utils/config";
-import healthyLungs from '../assets/healthylungs.jpg'
-import diseseslungs from '../assets/healthylungs.jpg'
+import { fields} from "../utils/config";
 import axios from '../config/apiInstance'
 import { API_ENDPOINTS } from '../constants/api';
+import interpretResult from '../utils/mlResult'
 
 export default function LungCancerPredictPage() {
   
@@ -19,74 +18,28 @@ export default function LungCancerPredictPage() {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [error, setError] = useState(null);
+  const [tokenStatus,setTokenStatus]=useState('')
 
   const navigate = useNavigate();
   const userToken = localStorage.getItem("token");
 
-  
-  useEffect(() => {
-    if (!userToken) {
-      navigate("/");
-    }
-  }, [navigate, userToken]);
 
-  
-  const interpretResult = (mlValue) => {
-    if (mlValue === 0) {
-      return {
-        status: "Lungs Healthy",
-        desc: "Great! Your lungs appear healthy. Maintain this by regular exercise and a healthy lifestyle.",
-        img: <img src={healthyLungs} alt="healthy Lungs img" />,
-        advice: (
-          <ul className="list-disc ml-5 mt-2 text-green-700">
-            <li>
-              Try these breathing exercises:{" "}
-              <a
-                href="https://www.healthline.com/health/breathing-exercises-for-copd"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Healthline Guide
-              </a>
-            </li>
-            <li>Keep up your healthy habits. Wish you continued good health! 🎉</li>
-          </ul>
-        ),
-      };
+  useEffect(() => {
+async function tokenStatus(){
+  try{
+     const res= await axios.post(API_ENDPOINTS.CHECK_TOKEN_STATUS,{},{headers:{Authorization:`Bearer ${userToken}`}})
+     console.log(res.data)
+    }catch(err)
+    {
+      if(err.response && err.status===401)
+      {
+        setTokenStatus({msg:err.response.data.error})
+      }
     }
-    if (mlValue === 1) {
-      return {
-        status: "Lung Cancer Detected",
-        desc: "Warning: The results indicate a high likelihood of lung cancer.",
-        img: <img src={diseseslungs} alt="diseseslungs img" />,
-        advice: (
-          <div>
-            <p className="text-red-700 font-bold mt-2">
-              Please consult a pulmonologist or oncologist immediately.
-            </p>
-            <p className="mt-2">Example specialist centers:</p>
-            <ul className="list-disc ml-5 mt-2">
-              {lungSpecialists.map((d) => (
-                <li key={d.doctor}>
-                  <a href={d.url} className="underline" target="_blank" rel="noopener noreferrer">
-                    {d.doctor}
-                  </a>{" "}
-                  at {d.hospital}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ),
-      };
-    }
-    return {
-      status: "Unknown Result",
-      desc: "Couldn't interpret the prediction.",
-      img: images.healthy,
-      advice: null,
-    };
-  };
+  }
+  tokenStatus()
+  }, [userToken]);
+
 
   // Validate all inputs are completed
   const isInputValid = () => {
@@ -107,23 +60,15 @@ export default function LungCancerPredictPage() {
 
     try {
       // Construct features object expected by backend
+    
       const features = {};
       fields.forEach((fieldObj, index) => {
         let value = vals[index];
         const key = fieldObj.name.toUpperCase(); 
+        features[key] = value
+       });
 
-        if (key === "GENDER") {
-          if (typeof value === "string") {
-            value = value.toUpperCase() === "M" ? 1 : 0;
-          }
-        }
-
-        // Convert empty string to 0
-        features[key] =
-          typeof value === "string" && value.trim() === "" ? 0 : Number(value) || value;
-      });
-
-
+ 
       const resp = await axios.post(
        API_ENDPOINTS.PREDICT,
         { features },
@@ -183,7 +128,8 @@ export default function LungCancerPredictPage() {
         setHistory(resp.data.data || []);
       } catch (error) {
         console.error("Error fetching prediction history:", error);
-        alert("Failed to fetch history.");
+        setHistory({msg:error.response.data.error})
+        console.log(history)
       } finally {
         setLoading(false);
       }
@@ -192,9 +138,10 @@ export default function LungCancerPredictPage() {
   };
  
 
+
   return (
     <>
-      <Navbar />
+    {tokenStatus===''?<><Navbar />
       <div className="relative min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-sky-200 via-sky-300 to-blue-200 transition-colors duration-700 px-2 sm:px-4 md:px-8">
         <CloudBackground />
         <div className="w-full max-w-3xl mt-12 mb-12 p-6 sm:p-8 bg-white/80 backdrop-blur rounded-3xl shadow-2xl border border-sky-100 animate-fade-in">
@@ -239,11 +186,11 @@ export default function LungCancerPredictPage() {
                 history={history}
                 interpretResult={interpretResult}
               />
-              {showHistory && <PredictionHistory history={history} interpretResult={interpretResult} />}
             </>
           )}
         </div>
-      </div>
+      </div></>:<div className="flex gap-3 m-5"><p>{tokenStatus.msg}</p><p><a className="text-blue-400 underline" href="/login">Login</a></p></div>}
+      
     </>
   );
 }

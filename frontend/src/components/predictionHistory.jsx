@@ -1,6 +1,8 @@
 export default function PredictionHistory({ history, interpretResult }) {
-  return (
-    <div className="mt-5 w-full max-w-3xl max-h-[60vh] overflow-y-auto space-y-6 px-2 sm:px-4 md:px-8 mx-auto">
+  const token=localStorage.getItem('token')
+  return (<>
+    {history.msg?history.msg:
+     <div className="mt-5 w-full max-w-3xl max-h-[60vh] overflow-y-auto space-y-6 px-2 sm:px-4 md:px-8 mx-auto">
       <h4 className="text-sky-700 font-bold mb-4 text-xl xs:text-2xl sm:text-3xl text-center drop-shadow-sm">
         Prediction History
       </h4>
@@ -13,7 +15,7 @@ export default function PredictionHistory({ history, interpretResult }) {
             ? item.output[0]?.prediction ?? item.output[0]
             : item.output?.prediction ?? item.output;
           const probabilityValue = item.output?.probability ?? null;
-
+          const Date=item.date||'Not available'
           const interpreted = interpretResult(predictionValue);
 
           return (
@@ -38,6 +40,7 @@ export default function PredictionHistory({ history, interpretResult }) {
                   Confidence: {(probabilityValue * 100).toFixed(1)}%
                 </p>
               )}
+              {Date?Date.toString():'Data Not Available'}
               {interpreted.advice && (
                 <div className="text-base sm:text-sm mb-2 text-center max-w-lg">{interpreted.advice}</div>
               )}
@@ -52,6 +55,7 @@ export default function PredictionHistory({ history, interpretResult }) {
           );
         })
       )}
-    </div>
-  );
+    </div>}
+   
+  </>);
 }
