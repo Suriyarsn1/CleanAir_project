@@ -9,10 +9,11 @@ export default function PredictionResult({
   interpretResult,
   probability, 
 }) {
+ 
   // Format probability as percentage 
   const formattedProbability =
-    probability !== null && probability !== undefined
-      ? `${(probability * 100).toFixed(1)}%`
+    resultData.probability !== null && resultData.probability !== undefined
+      ? `${(resultData.probability * 100).toFixed(1)}%`
       : "N/A";
 
   return (

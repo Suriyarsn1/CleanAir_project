@@ -28,7 +28,6 @@ export default function LungCancerPredictPage() {
 async function tokenStatus(){
   try{
      const res= await axios.post(API_ENDPOINTS.CHECK_TOKEN_STATUS,{},{headers:{Authorization:`Bearer ${userToken}`}})
-     console.log(res.data)
     }catch(err)
     {
       if(err.response && err.status===401)
@@ -74,14 +73,15 @@ async function tokenStatus(){
         { features },
         { headers: { Authorization: `Bearer ${userToken}` } }
       );
+     
         
      if (resp.status === 200 && resp.data && resp.data.output && "prediction" in resp.data.output) {
-  setResultData(interpretResult(resp.data.output.prediction));
+  setResultData(interpretResult(resp.data.output));
   setHistory((curr) => [
     ...curr,
     {
       input: vals,
-      output: resp.data.output.prediction,
+      output: resp.data.output,
       at: new Date().toLocaleString(),
     },
   ]);
@@ -113,6 +113,7 @@ async function tokenStatus(){
     setInput(Array(fields.length).fill(""));
   };
 
+  
  
   const handleShowHistory = async () => {
     if (!userToken) {
@@ -129,13 +130,14 @@ async function tokenStatus(){
       } catch (error) {
         console.error("Error fetching prediction history:", error);
         setHistory({msg:error.response.data.error})
-        console.log(history)
+        
       } finally {
         setLoading(false);
       }
     }
     setShowHistory((prev) => !prev);
   };
+  
  
 
 

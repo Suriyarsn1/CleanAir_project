@@ -3,9 +3,18 @@ import diseseslungs from '../assets/healthylungs.jpg'
 import {lungSpecialists} from '../utils/config.jsx'
 
  export default function interpretResult(mlValue){
-    if (mlValue === 0) {
+
+  let mlValue1;
+
+  if(Array.isArray(mlValue))
+  {
+     mlValue1=mlValue[0]
+  }
+
+    if (mlValue1.prediction === 0) {
       return {
         status: "Lungs Healthy",
+        probability:mlValue.probability,
         desc: "Great! Your lungs appear healthy. Maintain this by regular exercise and a healthy lifestyle.",
         img: <img src={healthyLungs} alt="healthy Lungs img" />,
         advice: (
@@ -26,9 +35,10 @@ import {lungSpecialists} from '../utils/config.jsx'
         ),
       };
     }
-    if (mlValue === 1) {
+    if (mlValue1.prediction === 1) {
       return {
         status: "Lung Cancer Detected",
+        probability:mlValue.probability,
         desc: "Warning: The results indicate a high likelihood of lung cancer.",
         img: <img src={diseseslungs} alt="diseseslungs img" />,
         advice: (

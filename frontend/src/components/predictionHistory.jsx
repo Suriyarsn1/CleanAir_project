@@ -1,5 +1,5 @@
 export default function PredictionHistory({ history, interpretResult }) {
-  const token=localStorage.getItem('token')
+
   return (<>
     {history.msg?history.msg:
      <div className="mt-5 w-full max-w-3xl max-h-[60vh] overflow-y-auto space-y-6 px-2 sm:px-4 md:px-8 mx-auto">
@@ -11,12 +11,13 @@ export default function PredictionHistory({ history, interpretResult }) {
       ) : (
         history.map((item, idx) => {
          
-          const predictionValue = Array.isArray(item.output)
-            ? item.output[0]?.prediction ?? item.output[0]
-            : item.output?.prediction ?? item.output;
-          const probabilityValue = item.output?.probability ?? null;
+          const predictionValue = Array.isArray(item)
+            ? item?.output ?? item
+            : item?.output ?? item;
+          const probabilityValue = item.output.probability?? null;
           const Date=item.date||'Not available'
           const interpreted = interpretResult(predictionValue);
+
 
           return (
             <div
